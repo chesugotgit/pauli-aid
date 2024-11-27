@@ -43,6 +43,18 @@ input[type="text"], input[type="email"], input[type="password"], select {
     color: #721c24;
 }
 
+/* Initial Implementation of Animations */
+@keyframes slide-up {
+    0% {
+        transform: translateY(-25%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Layout and Container Styles */
 .container {
     max-width: 480px;
@@ -63,6 +75,7 @@ header {
     text-align: center;
     padding: 20px 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: slide-up 0.6s ease-in-out;
 }
 
 header h1 {
@@ -81,6 +94,7 @@ nav {
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slide-up 0.7s ease-in-out;
 }
 
 nav a {
