@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Wiki</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Mental Health Wiki</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="student.html">Student Support</a>
+        <a href="teacher.html">Teacher Support</a>
+        <a href="account.html">Account</a>
+        <a href="wiki.html" class="active">Mental Health Wiki</a>
+        <a id="logout" onclick="logout()">Logout</a>
+    </nav>
+    <div class="container">
+        <div class="content">
+            <h2>Welcome to the Mental Health Wiki</h2>
+            <p>Explore various topics related to mental health.</p>
+            <input type="text" id="search" placeholder="Search for topics...">
+            <button onclick="searchTopics()" class="btn">Search</button>
+            <div id="results"></div>
+        </div>
+    </div>
+    <script>
+        function searchTopics() {
+            const query = document.getElementById('search').value;
+            fetch(`/api/articles/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = ''; // Clear previous results
+                    if (data.length > 0) {
+                        data.forEach(article => {
+                            const articleDiv = document.createElement('div');
+                            articleDiv.className = 'article';
+                            articleDiv.innerHTML = `<h3>${article[0]}</h3><p>${article[1]}</p>`;
+                            resultsDiv.appendChild(articleDiv);
+                        });
+                    } else {
+                        resultsDiv.innerHTML = '<p>No articles found.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching articles:', error);
+                });
+        }
+    </script>
+</body>
+</html>
