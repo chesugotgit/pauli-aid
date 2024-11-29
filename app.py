@@ -3,6 +3,7 @@ from flask_cors import CORS
 import sqlite3
 import os
 import bcrypt
+import random
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -166,15 +167,17 @@ def delete_task(task_id):
 
     return jsonify({"message": "Task deleted successfully"}), 200
 
-# New routes for articles
+# New route to fetch all articles with shuffling
 @app.route('/api/articles', methods=['GET'])
 def get_articles():
     with sqlite3.connect('pauli_aid.db') as conn:
         c = conn.cursor()
         c.execute("SELECT title, content FROM articles")
         articles = c.fetchall()
+        random.shuffle(articles)  # Shuffle the articles
     return jsonify(articles), 200
 
+# New route to search articles by title with shuffling
 @app.route('/api/articles/search', methods=['GET'])
 def search_articles():
     query = request.args.get('query')
@@ -182,24 +185,8 @@ def search_articles():
         c = conn.cursor()
         c.execute("SELECT title, content FROM articles WHERE title LIKE ?", ('%' + query + '%',))
         articles = c.fetchall()
+        random.shuffle(articles)  # Shuffle the articles
     return jsonify(articles), 200
-
-# Function to insert sample articles
-def insert_sample_articles():
-    sample_articles = [
-        ("Understanding Anxiety", "Anxiety is a normal reaction to stress. It can help you deal with a tense situation, such as giving a speech or taking a test. However, when anxiety becomes overwhelming, it can interfere with daily activities."),
-        ("Coping with Depression", "Depression is more than just feeling sad. It can affect your ability to function in daily life. It's important to seek help and talk to someone about how you're feeling."),
-        ("Coping Strategies", "There are many strategies to cope with stress and anxiety, including mindfulness, exercise, and talking to a friend. Finding what works for you is key to managing your mental health.")
-    ]
-
-    with sqlite3.connect('pauli_aid.db') as conn:
-        c = conn.cursor()
-        for title, content in sample_articles:
-            c.execute("INSERT INTO articles (title, content) VALUES (?, ?)", (title, content))
-        conn.commit()
-
-# Call the function to insert sample articles
-insert_sample_articles()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
