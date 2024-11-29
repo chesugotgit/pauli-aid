@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,10 +41,88 @@
                 <div id="breathing-text">Click to start</div>
                 <button onclick="startBreathingExercise()" class="btn">Start Exercise</button>
             </div>
+            <div class="feature meditation">
+                <h3>Guided Meditation</h3>
+                <p class="text">Follow along with these guided meditation sessions:</p>
+                <ul>
+                    <li><a href="https://www.youtube.com/watch?v=1ZYbU82GVz4" target="_blank">10-Minute Guided Meditation</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=MIr3RsUWrdo" target="_blank">5-Minute Breathing Meditation</a></li>
+                </ul>
+                <h4>Meditation Timer</h4>
+                <input type="number" id="meditation-duration" placeholder="Minutes" min="1">
+                <button onclick="startMeditationTimer()" class="btn">Start Timer</button>
+                <div id="timer-message"></div>
+            </div>
+            <div class="feature resources">
+                <h3>Mental Health Resources</h3>
+                <ul>
+                    <li><a href="https://www.mentalhealth.gov/" target="_blank">MentalHealth.gov</a></li>
+                    <li><a href="https://www.nami.org/Home" target="_blank">NAMI - National Alliance on Mental Illness</a></li>
+                    <li><a href="https://www.suicidepreventionlifeline.org/" target="_blank">National Suicide Prevention Lifeline</a></li>
+                </ul>
+            </div>
+            <div class="feature feedback">
+                <h3>Feedback</h3>
+                <form id="feedback-form" onsubmit="return submitFeedback()">
+                    <textarea id="feedback" placeholder="Your feedback..." required></textarea>
+                    <button type="submit" class="btn">Submit Feedback</button>
+                </form>
+                <div id="feedback-message" class="error-message"></div>
+            </div>
         </div>
     </div>
     <script>
-        // Existing JavaScript code...
+        function trackMood(mood) {
+            let message = '';
+
+            switch (mood) {
+                case '😄':
+                    message = "That's great to hear! Keep smiling!";
+                    break;
+                case '🙂':
+                    message = "Glad you're feeling good!";
+                    break;
+                case '😐':
+                case '🙁':
+                case '😢':
+                    message = "It seems like you're not feeling your best. How about playing a safe browser game or watching some funny cat videos?";
+                    break;
+                default:
+                    message = "Mood not recognized.";
+            }
+
+            alert(message); // Display the message as a pop-up
+        }
+
+        function startMeditationTimer() {
+            const duration = document.getElementById('meditation-duration').value;
+            if (duration < 1) {
+                alert("Please enter a valid duration.");
+                return;
+            }
+            const totalTime = duration * 60; // Convert to seconds
+            let timeLeft = totalTime;
+
+            const timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-message').textContent = "Meditation session complete!";
+                    return;
+                }
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer-message').textContent = `Time left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }, 1000);
+        }
+
+        function submitFeedback() {
+            const feedback = document.getElementById('feedback').value;
+            // Here you would typically send the feedback to the server
+            document.getElementById('feedback-message').textContent = 'Thank you for your feedback!';
+            document.getElementById('feedback').value = ''; // Clear the textarea
+            return false; // Prevent form submission
+        }
     </script>
 </body>
 </html>
